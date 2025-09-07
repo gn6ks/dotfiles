@@ -2,7 +2,6 @@
 -- título: gn6ks dotfiles init.lua
 -- autor: gn6ks
 -- ================================================================================================
-
 -- Configurar tecla líder como espacio
 vim.g.mapleader = " "
 
@@ -25,12 +24,9 @@ local gruvbox_colors = {
 
 -- Aplica el tema Gruvbox a los grupos de sintaxis
 local function apply_gruvbox()
-  -- Transparencia
   vim.api.nvim_set_hl(0, "Normal", { fg = gruvbox_colors.fg0, bg = "none" })
   vim.api.nvim_set_hl(0, "NormalNC", { bg = "none" })
   vim.api.nvim_set_hl(0, "EndOfBuffer", { bg = "none" })
-
-  -- Grupos de sintaxis básicos
   vim.api.nvim_set_hl(0, "Comment", { fg = gruvbox_colors.gray, italic = true })
   vim.api.nvim_set_hl(0, "String", { fg = gruvbox_colors.green })
   vim.api.nvim_set_hl(0, "Number", { fg = gruvbox_colors.orange })
@@ -47,10 +43,9 @@ local function apply_gruvbox()
   vim.api.nvim_set_hl(0, "MatchParen", { bg = gruvbox_colors.bg2, fg = gruvbox_colors.orange })
   vim.api.nvim_set_hl(0, "Pmenu", { bg = gruvbox_colors.bg1, fg = gruvbox_colors.fg0 })
   vim.api.nvim_set_hl(0, "PmenuSel", { bg = gruvbox_colors.bg2, fg = gruvbox_colors.fg0 })
-
-  -- Solución para la línea roja (cursor)
   vim.api.nvim_set_hl(0, "Cursor", { fg = gruvbox_colors.bg0, bg = gruvbox_colors.fg0 })
   vim.api.nvim_set_hl(0, "CursorColumn", { bg = gruvbox_colors.bg1 })
+  vim.api.nvim_set_hl(0, "SignColumn", { bg = "none", fg = "none" })
 end
 
 -- Aplicar el tema
@@ -69,13 +64,6 @@ vim.opt.colorcolumn = ""                           -- Desactivar línea roja de 
 vim.opt.signcolumn = "no"                          -- Desactivar columna de signos
 vim.opt.numberwidth = 4                            -- Ancho estándar para la columna de números
 
--- Eliminar fondo gris en la columna de números y signos
-vim.api.nvim_set_hl(0, "SignColumn", { bg = "none", fg = "none" })
-vim.api.nvim_set_hl(0, "LineNr", { fg = gruvbox_colors.gray, bg = "none" })
-
--- Asegurar que ColorColumn no tenga fondo
-vim.cmd("highlight ColorColumn guibg=NONE ctermbg=NONE")
-
 -- Sangrado
 vim.opt.tabstop = 2                                -- Ancho de tabulación
 vim.opt.shiftwidth = 2                             -- Ancho de sangrado
@@ -92,10 +80,6 @@ vim.opt.incsearch = true                           -- Mostrar coincidencias mien
 
 -- Configuración visual
 vim.opt.termguicolors = true                       -- Habilitar colores de 24 bits
-vim.opt.signcolumn = "yes"                         -- Mostrar siempre la columna de signos
-vim.opt.colorcolumn = "100"                        -- Mostrar columna en el carácter 100
-vim.opt.showmatch = true                           -- Resaltar paréntesis coincidentes
-vim.opt.matchtime = 2                              -- Tiempo para mostrar paréntesis coincidente
 vim.opt.cmdheight = 1                              -- Altura de la línea de comandos
 vim.opt.completeopt = "menuone,noinsert,noselect"  -- Opciones de autocompletado
 vim.opt.showmode = false                           -- No mostrar modo en la línea de comandos
@@ -109,9 +93,9 @@ vim.opt.synmaxcol = 300                            -- Límite de resaltado de si
 
 -- Función para mapear atajos de teclado
 local function map(mode, lhs, rhs, opts)
-    local options = { noremap = true }
+    local options = { noremap = true, silent = true }
     if opts then
-        options = vim.tbl_extend("force", options, opts)
+        options = vim.tbl_deep_extend("force", options, opts)
     end
     vim.api.nvim_set_keymap(mode, lhs, rhs, options)
 end
@@ -119,6 +103,10 @@ end
 -- Atajos de teclado
 -- Recargar configuración
 map("n", "<leader>r", ":luafile ~/.config/nvim/init.lua<CR>")  -- Recargar configuración de Neovim
+
+-- Atajos para la gestión de archivos
+map("n", "<leader>w", ":write<CR>")   -- Guardar archivo
+map("n", "<leader>q", ":quit<CR>")    -- Salir de Neovim
 
 -- Atajos para pestañas
 map("n", "<leader>t", ":tabnew<CR>")               -- Crear nueva pestaña
@@ -157,3 +145,4 @@ map("v", "<leader>r", "\"hy:%s/<C-r>h//g<left><left>")  -- Reemplazar todas las 
 map("v", "<C-s>", ":sort<CR>")                     -- Ordenar texto resaltado
 map("v", "J", ":m '>+1<CR>gv=gv")                  -- Mover línea resaltada hacia abajo
 map("v", "K", ":m '<-2<CR>gv=gv")                  -- Mover línea resaltada hacia arriba
+
